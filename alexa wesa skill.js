@@ -69,8 +69,8 @@ function onLaunch(launchRequest, session, callback) {
  * Called when the user specifies an intent for this skill.
  */
 function help (intent, session, callback){
-    var cardTitle = "W. Y. E. P. Where the music matters";
-    var speechOutput = "Commands you can say are: Alexa, tell y. e. p. to play.  Alexa, tell y. e. p. to stop.  Alexa, ask y. e. p. what song this is.";
+    var cardTitle = "W. E. S. A. Pittsburgh's NPR News Station";
+    var speechOutput = "Commands you can say are: Alexa, open w. e. s. a.  Alexa, stop.  Alexa, resume";
     callback(session.attributes, buildSpeechletResponse(cardTitle, speechOutput, "", true));
 } 
 function onIntent(intentRequest, session, callback) {
@@ -93,9 +93,6 @@ function onIntent(intentRequest, session, callback) {
         case "AMAZON.ResumeIntent":
             play(intent, session, callback);
             break;    
-        case "whatSong":
-            whatSong(intent, session, callback);
-            break;
         default:
             throw "Invalid intent";
     }
@@ -110,37 +107,6 @@ function onSessionEnded(sessionEndedRequest, session) {
         ", sessionId=" + session.sessionId);
 
     // Add any cleanup logic here
-}
-
-function whatSong(intent, session, callback) {
-    var surl = "https://api.composer.nprstations.org/v1/widget/50e451b6a93e91ee0a00028e/now?format=json";
-
-    https.get(surl, function(res) {
-        var body = "";
-
-        res.on("data", function(chunk) {
-            body += chunk;
-        });
-
-        res.on("end", function() {
-            var sresponse = JSON.parse(body);
-            var songInfo = "";
-            if (sresponse.onNow.song.trackName === "") {
-                songInfo = "I'm sorry, the song information is missing";
-            } else {
-                songInfo = "This song is: " + sresponse.onNow.song.trackName + " by " + sresponse.onNow.song.artistName;
-            }
-            callback(session.attributes, buildSpeechletResponseWithoutCard(songInfo, "", "true"));
-        });
-    }).on("error", function(e) {
-        callback(session.attributes, buildSpeechletResponseWithoutCard("There was an error, please try again later", "", "true"));
-    });
-    // callback(session.attributes, buildSpeechletResponseWithoutCard("This song is feel it still by portugal the man", "", "true"));
-}
-
-function favorite(intent, session, callback) {
-    callback(session.attributes,
-        buildSpeechletResponseWithoutCard("This song was added to your favorites", "", "true"));
 }
 
 // ------- Helper functions to build responses -------
@@ -213,7 +179,7 @@ function play(intent, session, callback) {
                 playBehavior: "REPLACE_ALL",
                 audioItem: {
                     stream: {
-                        url: "https://playerservices.streamtheworld.com/api/livestream-redirect/WYEPFMAAC.aac",
+                        url: "https://playerservices.streamtheworld.com/api/livestream-redirect/WESAFMAAC.aac",
                         token: "913",
                         expectedPreviousToken: null,
                         offsetInMilliseconds: 0
